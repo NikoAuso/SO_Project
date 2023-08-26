@@ -1,0 +1,54 @@
+{
+  "processi": [
+    {
+      "pid": 1,
+      "tempo_arrivo": 2,
+      "tempo_burst": 5
+    },
+    {
+      "pid": 2,
+      "tempo_arrivo": 2,
+      "tempo_burst": 3
+    },
+    {
+      "pid": 3,
+      "tempo_arrivo": 3,
+      "tempo_burst": 6
+    },
+    {
+      "pid": 4,
+      "tempo_arrivo": 5,
+      "tempo_burst": 8
+    },
+    {
+      "pid": 5,
+      "tempo_arrivo": 5,
+      "tempo_burst": 10
+    },
+    {
+      "pid": 6,
+      "tempo_arrivo": 4,
+      "tempo_burst": 4
+    },
+    {
+      "pid": 7,
+      "tempo_arrivo": 10,
+      "tempo_burst": 2
+    },
+    {
+      "pid": 8,
+      "tempo_arrivo": 8,
+      "tempo_burst": 5
+    },
+    {
+      "pid": 9,
+      "tempo_arrivo": 7,
+      "tempo_burst": 1
+    },
+    {
+      "pid": 10,
+      "tempo_arrivo": 9,
+      "tempo_burst": 6
+    }
+  ]
+}
