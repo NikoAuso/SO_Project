@@ -9,8 +9,10 @@ struct Process {
     int pid;
     int tempo_arrivo;
     int tempo_burst;
-    int priorita;
     int tempo_rimanente;
+    int tempo_turnaround;
+    int tempo_attesa;
+    int tempo_fine;
 };
 
 #endif //SO_PROJECT_PROCESSI_H
