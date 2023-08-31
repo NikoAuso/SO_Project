@@ -6,13 +6,13 @@
 #define SO_PROJECT_PROCESSI_H
 
 struct Process {
-    int pid;
-    int tempo_arrivo;
-    int tempo_burst;
-    int tempo_rimanente;
-    int tempo_turnaround;
-    int tempo_attesa;
-    int tempo_fine;
+    int pid;                // ID del processo
+    int tempo_arrivo;       // Tempo di arrivo del processo
+    int tempo_burst;        // Tempo di burst del processo
+    int tempo_rimanente;    // Tempo di esecuzione rimanente del processo
+    int tempo_turnaround;   // Tempo di turnaround del processo
+    int tempo_attesa;       // Tempo di attesa del processo
+    int tempo_fine;         // Tempo di completamento del processo
 };
 
 #endif //SO_PROJECT_PROCESSI_H

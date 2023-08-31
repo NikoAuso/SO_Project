@@ -5,12 +5,17 @@
 #ifndef SO_PROJECT_ALGORITMO_FCFS_H
 #define SO_PROJECT_ALGORITMO_FCFS_H
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <math.h>
 #include "processi.h"
+#include "utilities.h"
 
 /**
  * Simula l'algoritmo di scheduling First-Come, First-Served (FCFS) su un array di processi.
  *
- * Questa funzione esegue la simulazione dell'algoritmo di scheduling FCFS su un array di processi fornito.
+ * Esegue la simulazione dell'algoritmo di scheduling FCFS su un array di processi fornito.
  * Ogni processo viene eseguito nell'ordine in cui è arrivato (first-come) e completato interamente prima
  * di passare al successivo. Durante la simulazione, vengono visualizzati i dettagli di esecuzione di ciascun
  * processo, compreso il tempo di burst, il completamento, il tempo di turnaround (differenza tra il tempo

@@ -5,18 +5,21 @@
 #ifndef SO_PROJECT_SELEZIONE_ALGORITMI_H
 #define SO_PROJECT_SELEZIONE_ALGORITMI_H
 
+#include <stdio.h>
+#include <stdlib.h>
 #include "processi.h"
+#include "algoritmo_FCFS.h"
+#include "algoritmo_SJF.h"
+#include "algoritmo_SRTF.h"
+#include "algoritmo_RR.h"
+#include "utilities.h"
 
 /**
- * Consente all'utente di selezionare e avviare un algoritmo di scheduling.
+ * Funzione che permette all'utente di scegliere un algoritmo di scheduling
+ * e avvia la simulazione dell'algoritmo scelto sui processi dati in input.
  *
- * Questa funzione visualizza un menu in cui l'utente può scegliere tra diversi algoritmi di scheduling.
- * Dopo aver fatto la scelta, l'algoritmo selezionato viene avviato sulla lista dei processi forniti.
- * Gli algoritmi disponibili sono: FCFS (First-Come, First-Served), SJF (Shortest Job First),
- * Round Robin e SRTF (Shortest Remaining Time First).
- *
- * @param processi Un array di strutture "Process" contenente i dettagli dei processi da eseguire.
- * @param numero_processi Il numero totale di processi presenti nell'array.
+ * @param processi Array di processi da schedulare.
+ * @param numero_processi Numero totale di processi nell'array.
  */
 void scegli_algoritmo(struct Process *processi, int numero_processi);
 

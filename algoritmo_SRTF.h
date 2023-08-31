@@ -5,7 +5,13 @@
 #ifndef SO_PROJECT_ALGORITMO_SRTF_H
 #define SO_PROJECT_ALGORITMO_SRTF_H
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <limits.h>
+#include <math.h>
 #include "processi.h"
+#include "utilities.h"
 
 /**
  * Simula l'algoritmo di scheduling Shortest Remaining Time First (SRTF) su un array di processi.

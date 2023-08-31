@@ -5,7 +5,12 @@
 #ifndef SO_PROJECT_ALGORITMO_SJF_H
 #define SO_PROJECT_ALGORITMO_SJF_H
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <limits.h>
 #include "processi.h"
+#include "utilities.h"
 
 /**
  * Simula l'algoritmo di scheduling Shortest Job First (SJF) su un array di processi.

@@ -5,7 +5,11 @@
 #ifndef SO_PROJECT_ALGORITMO_RR_H
 #define SO_PROJECT_ALGORITMO_RR_H
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include "processi.h"
+#include "utilities.h"
 
 /**
  * Simula l'algoritmo di scheduling Round Robin su un array di processi.
