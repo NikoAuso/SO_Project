@@ -23,7 +23,6 @@ int leggi_file_JSON(const char *filename, struct Process **processi, int MAX_PRO
     // Legge il contenuto del file, lo mette nel buffer e chiudi il file
     fread(buffer, 1, lunghezzaFile, file);
     fclose(file);
-
     buffer[lunghezzaFile] = '\0';
 
     // Effettua il parsing del JSON

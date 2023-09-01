@@ -47,7 +47,7 @@ void simulaSRTF(struct Process processi[], int numero_processi) {
             stampaSpazi(tempo_corrente);
             for (int t = 0; t < burst_piu_breve; t++) {
                 printf("%c", '#');
-                fflush(stdout);  // Svuotare il buffer di output per garantire una stampa immediata
+                fflush(stdout);  // Svuota il buffer di output per garantire una stampa immediata
                 sleep(1);
                 tempo_corrente++;
                 processi[indice_piu_breve].tempo_rimanente--;

@@ -33,7 +33,7 @@ void simulaRR(struct Process processi[], int numero_processi, int quantum) {
                 stampaSpazi(tempo_corrente);
                 for (int t = 0; t < burst; t++) {
                     printf("%c", '#');
-                    fflush(stdout);  // Flush the output buffer to ensure immediate printing
+                    fflush(stdout);  // Svuota il buffer di output per garantire una stampa immediata
                     sleep(1);
                 }
                 processi[i].tempo_rimanente -= burst;

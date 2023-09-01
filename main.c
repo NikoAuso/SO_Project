@@ -25,6 +25,7 @@ int main() {
     printf("Puoi modificare ora il file o utilizzare i dati già inseriti.\n");
     while (true) {
         char usa_file;
+
         // Chiede all'utente se vuole utilizzare un file per i dati o inserirli manualmente
         printf("Vuoi utilizzare il file? (y/N): ");
         scanf(" %c", &usa_file);

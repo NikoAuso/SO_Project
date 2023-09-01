@@ -29,7 +29,7 @@ void simulaFCFS(struct Process processi[], int numero_processi) {
         stampaSpazi(tempo_corrente);
         for (int t = 0; t < processi[i].tempo_burst; t++) {
             printf("%c", '#');
-            fflush(stdout);  // Flush the output buffer to ensure immediate printing
+            fflush(stdout);  // Svuota il buffer di output per garantire una stampa immediata
             sleep(1);
         }
         tempo_corrente += processi[i].tempo_burst;
