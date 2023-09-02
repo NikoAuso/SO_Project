@@ -5,6 +5,7 @@
 #ifndef SO_PROJECT_PROCESSI_H
 #define SO_PROJECT_PROCESSI_H
 
+// Definisce la struttura di un processo
 struct Process {
     int pid;                // ID del processo
     int tempo_arrivo;       // Tempo di arrivo del processo

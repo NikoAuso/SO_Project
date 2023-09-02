@@ -22,7 +22,7 @@ int main() {
 
     printf("Il tempo di esecuzione dei processi è espresso in secondi.\n");
     printf("Il simulatore offre un set di processi già pre-impostati che puoi utilizzare per semplificare l'inserimento dei dati.\n");
-    printf("Puoi modificare ora il file o utilizzare i dati già inseriti.\n");
+    printf("Puoi modificare ora il file (\"processi.json\") o utilizzare i dati già inseriti.\n");
     while (true) {
         char usa_file;
 

@@ -1,1 +1,0 @@
-gcc -o eseguibile main.c usa_file_JSON.c selezione_algoritmi.c cJSON.c algoritmo_RR.c algoritmo_FCFS.c algoritmo_SJF.c algoritmo_SRTF.c utilities.c -lm
