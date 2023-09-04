@@ -22,9 +22,9 @@
  * dell'esecuzione, il completamento, il tempo di turnaround (differenza tra il tempo di completamento e il tempo
  * di arrivo) e il tempo di attesa (differenza tra il tempo di turnaround e il tempo di burst).
  *
- * @param processi[] Un array di strutture "Process" contenente i dettagli dei processi da eseguire.
+ * @param processi[] Un array di strutture "Processi" contenente i dettagli dei processi da eseguire.
  * @param numero_processi Il numero totale di processi presenti nell'array.
  */
-void simulaSRTF(struct Process processi[], int numero_processi);
+void simulaSRTF(struct Processi processi[], int numero_processi, int burst_totale);
 
 #endif //SO_PROJECT_ALGORITMO_SRTF_H

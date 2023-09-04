@@ -24,16 +24,15 @@ int main() {
     printf("Il simulatore offre un set di processi già pre-impostati che puoi utilizzare per semplificare l'inserimento dei dati.\n");
     printf("Puoi modificare ora il file (\"processi.json\") o utilizzare i dati già inseriti.\n");
     while (true) {
-        char usa_file;
-
         // Chiede all'utente se vuole utilizzare un file per i dati o inserirli manualmente
+        char usa_file;
         printf("Vuoi utilizzare il file? (y/N): ");
         scanf(" %c", &usa_file);
         getchar(); // Consume il carattere di nuova riga nel buffer
 
         if (usa_file == 'y' || usa_file == 'Y') {
             // Chiama la funzione "con_file" per utilizzare i dati da un file JSON
-            con_file("processi.json");
+            con_file("../processi.json");
         } else if (usa_file == 'n' || usa_file == 'N') {
             // Chiama la funzione "senza_file" per inserire manualmente i dati
             senza_file();
@@ -42,8 +41,9 @@ int main() {
             printf("Errore: input non valido!");
             return 1; // Termina il programma con codice di errore
         }
-        char riprova;
+
         // Chiede all'utente se vuole riprovare o terminare il programma
+        char riprova;
         printf("Vuoi riprovare (Y) o terminare il programma (N)? ");
         scanf(" %c", &riprova);
         getchar(); // Consume il carattere di nuova riga nel buffer

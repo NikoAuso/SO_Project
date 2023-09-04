@@ -4,12 +4,12 @@
 
 #include "algoritmo_RR.h"
 
-void simulaRR(struct Process processi[], int numero_processi, int quantum) {
-    ordina_processi(processi, numero_processi);
+void simulaRR(struct Processi processi[], int numero_processi, int quantum, int burst_totale) {
+    char buffer[5000];
     system("clear");
 
-    printf("Simulazione Scheduling RR\n\n");
-    printf("Diagramma di Gantt:\n");
+    sprintf(buffer, "Simulazione Scheduling RR\n\n");
+    strcat(buffer, "Diagramma di Gantt:\n");
 
     int tempo_corrente = 0;
     int processi_completati = 0;
@@ -23,21 +23,21 @@ void simulaRR(struct Process processi[], int numero_processi, int quantum) {
             }
             if (processi[i].tempo_rimanente > 0) {
                 int burst = (processi[i].tempo_rimanente > quantum) ? quantum : processi[i].tempo_rimanente;
-                printf("Processo %s%d (T. arrivo: %s%d - T. burst: %s%d) -->",
-                       ((int) log10(processi[i].pid) + 1 < 2) ? " " : "",
-                       processi[i].pid,
-                       ((int) log10(processi[i].tempo_arrivo) + 1 < 2) ? " " : "",
-                       processi[i].tempo_arrivo,
-                       ((int) log10(processi[i].tempo_burst) + 1 < 2) ? " " : "",
-                       processi[i].tempo_burst);
-                stampaSpazi(tempo_corrente);
+                sprintf(buffer + strlen(buffer), "Processo %s%d (T. arrivo: %s%d - T. burst: %s%d) -->",
+                        ((int) log10(processi[i].pid) + 1 < 2) ? " " : "",
+                        processi[i].pid,
+                        ((int) log10(processi[i].tempo_arrivo) + 1 < 2) ? " " : "",
+                        processi[i].tempo_arrivo,
+                        ((int) log10(processi[i].tempo_burst) + 1 < 2) ? " " : "",
+                        processi[i].tempo_burst);
+                stampa_spazi(tempo_corrente, buffer);
                 for (int t = 0; t < burst; t++) {
-                    printf("%c", '#');
+                    sprintf(buffer + strlen(buffer), "%c", '#');
                     fflush(stdout);  // Svuota il buffer di output per garantire una stampa immediata
-                    sleep(1);
                 }
                 processi[i].tempo_rimanente -= burst;
                 tempo_corrente += burst;
+                stampa_spazi(burst_totale - tempo_corrente, buffer);
                 if (processi[i].tempo_rimanente == 0) {
                     processi_completati++;
                     processi[i].tempo_fine = tempo_corrente;
@@ -45,11 +45,15 @@ void simulaRR(struct Process processi[], int numero_processi, int quantum) {
                     processi[i].tempo_attesa = processi[i].tempo_turnaround - processi[i].tempo_burst;
                     tempo_medio_di_turnaround += processi[i].tempo_turnaround;
                     tempo_medio_di_attesa += processi[i].tempo_attesa;
-                    printf("   [Processo %d terminato (Tempo di fine: %d)]", processi[i].pid, tempo_corrente);
-                }
-                printf("\n");
+                    sprintf(buffer + strlen(buffer), " - [Processo %d terminato (Tempo di fine: %d)]\n",
+                            processi[i].pid, tempo_corrente);
+                }else
+                    sprintf(buffer + strlen(buffer),"\n");
             }
         }
     }
-    stampa_risultati(processi, numero_processi,tempo_medio_di_attesa,tempo_medio_di_turnaround);
+    sprintf(buffer + strlen(buffer), "\n");
+    stampa_risultati(processi, numero_processi, tempo_medio_di_attesa, tempo_medio_di_turnaround, buffer);
+    printf("%s", buffer);
+    richiedi_salvataggio_su_file(buffer, "RR");
 }

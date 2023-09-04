@@ -4,12 +4,12 @@
 
 #include "usa_file_JSON.h"
 
-int leggi_file_JSON(const char *filename, struct Process **processi, int MAX_PROCESSES) {
+void leggi_file_JSON(const char *filename, struct Processi **processi, int *numero_processi) {
     // Apre il file JSON in modalità di lettura
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
         printf("Impossibile aprire il file %s.\n", filename);
-        return 0;
+        exit(1);
     }
 
     // Calcola la lunghezza del file
@@ -33,7 +33,7 @@ int leggi_file_JSON(const char *filename, struct Process **processi, int MAX_PRO
             fprintf(stderr, "Errore durante il parsing JSON: %s\n", errore);
         }
         free(buffer);
-        return 0;
+        exit(1);
     }
 
     // Ottiene l'oggetto JSON contenente l'array di processi
@@ -41,29 +41,30 @@ int leggi_file_JSON(const char *filename, struct Process **processi, int MAX_PRO
     if (!cJSON_IsArray(processiJSON)) {
         cJSON_Delete(json);
         free(buffer);
-        return 0;
+        exit(1);
     }
 
     // Verifica il numero di processi nel JSON
-    int numero_processi = cJSON_GetArraySize(processiJSON);
-    if (numero_processi > MAX_PROCESSES) {
+    int numero_processi_ottenuti = cJSON_GetArraySize(processiJSON);
+    if (numero_processi_ottenuti > MAX_PROCESSES) {
         printf("Il numero massimo di processi consentito è %d.\n", MAX_PROCESSES);
         cJSON_Delete(json);
         free(buffer);
-        return 0;
+        exit(1);
     }
+    *numero_processi = numero_processi_ottenuti;
 
     // Alloca memoria dinamicamente per il numero di processi nel JSON
-    *processi = (struct Process *)malloc(numero_processi * sizeof(struct Process));
+    *processi = (struct Processi *)malloc(*numero_processi * sizeof(struct Processi));
     if (*processi == NULL) {
         printf("Errore nell'allocazione di memoria.\n");
         cJSON_Delete(json);
         free(buffer);
-        return 0;
+        exit(1);
     }
 
     // Estrae le informazioni di ciascun processo dall'array JSON
-    for (int i = 0; i < numero_processi; i++) {
+    for (int i = 0; i < *numero_processi; i++) {
         cJSON *processoJSON = cJSON_GetArrayItem(processiJSON, i);
         if (cJSON_IsObject(processoJSON)) {
             (*processi)[i].pid = cJSON_GetObjectItemCaseSensitive(processoJSON, "pid")->valueint;
@@ -79,7 +80,4 @@ int leggi_file_JSON(const char *filename, struct Process **processi, int MAX_PRO
     // Libera la memoria allocata per il JSON e il buffer
     cJSON_Delete(json);
     free(buffer);
-
-    // Restituisce il numero di processi letti
-    return numero_processi;
 }

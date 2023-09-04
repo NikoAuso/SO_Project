@@ -4,12 +4,12 @@
 
 #include "algoritmo_SJF.h"
 
-void simulaSJF(struct Process processi[], int numero_processi) {
-    ordina_processi(processi, numero_processi);
+void simulaSJF(struct Processi processi[], int numero_processi, int burst_totale) {
+    char buffer[5000];
     system("clear");
 
-    printf("Simulazione Scheduling SJF\n\n");
-    printf("Diagramma di Gantt:\n");
+    sprintf(buffer,"Simulazione Scheduling SJF\n\n");
+    strcat(buffer,"Diagramma di Gantt:\n");
 
     int tempo_corrente = 0;
     int processi_rimasti = numero_processi;
@@ -36,18 +36,17 @@ void simulaSJF(struct Process processi[], int numero_processi) {
             tempo_corrente++; //Nessun processo selezionato
         } else {
             // Processo selezionato
-            printf("Processo %s%d (T. arrivo: %s%d - T. burst: %s%d) -->",
+            sprintf(buffer + strlen(buffer),"Processo %s%d (T. arrivo: %s%d - T. burst: %s%d) -->",
                    ((int) log10(processi[indice_piu_breve].pid) + 1 < 2) ? " " : "",
                    processi[indice_piu_breve].pid,
                    ((int) log10(processi[indice_piu_breve].tempo_arrivo) + 1 < 2) ? " " : "",
                    processi[indice_piu_breve].tempo_arrivo,
                    ((int) log10(processi[indice_piu_breve].tempo_burst) + 1 < 2) ? " " : "",
                    processi[indice_piu_breve].tempo_burst);
-            stampaSpazi(tempo_corrente);
+            stampa_spazi(tempo_corrente, buffer);
             for (int t = 0; t < burst_piu_breve; t++) {
-                printf("%c", '#');
+                sprintf(buffer + strlen(buffer),"%c", '#');
                 fflush(stdout);  // Svuota il buffer di output per garantire una stampa immediata
-                sleep(1);
                 tempo_corrente++;
                 processi[indice_piu_breve].tempo_rimanente--;
             }
@@ -61,11 +60,14 @@ void simulaSJF(struct Process processi[], int numero_processi) {
                 processi_rimasti--;
                 tempo_medio_di_turnaround += processi[indice_piu_breve].tempo_turnaround;
                 tempo_medio_di_attesa += processi[indice_piu_breve].tempo_attesa;
-                printf("   [Processo %d terminato (Tempo di fine: %d)]", processi[indice_piu_breve].pid,
-                       tempo_corrente);
-            }
-            printf("\n");
+                stampa_spazi(burst_totale - tempo_corrente, buffer);
+                sprintf(buffer + strlen(buffer)," - [Processo %d terminato (Tempo di fine: %d)]\n", processi[indice_piu_breve].pid, tempo_corrente);
+            }else
+                sprintf(buffer + strlen(buffer), "\n");
         }
     }
-    stampa_risultati(processi, numero_processi,tempo_medio_di_attesa,tempo_medio_di_turnaround);
+    sprintf(buffer + strlen(buffer), "\n");
+    stampa_risultati(processi, numero_processi, tempo_medio_di_attesa, tempo_medio_di_turnaround, buffer);
+    printf("%s", buffer);
+    richiedi_salvataggio_su_file(buffer, "FCFS");
 }

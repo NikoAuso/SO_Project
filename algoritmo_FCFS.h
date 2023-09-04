@@ -13,18 +13,12 @@
 #include "utilities.h"
 
 /**
- * Simula l'algoritmo di scheduling First-Come, First-Served (FCFS) su un array di processi.
+ * Simula l'algoritmo di scheduling FCFS (First-Come, First-Served) per una serie di processi.
  *
- * Esegue la simulazione dell'algoritmo di scheduling FCFS su un array di processi fornito.
- * Ogni processo viene eseguito nell'ordine in cui è arrivato (first-come) e completato interamente prima
- * di passare al successivo. Durante la simulazione, vengono visualizzati i dettagli di esecuzione di ciascun
- * processo, compreso il tempo di burst, il completamento, il tempo di turnaround (differenza tra il tempo
- * di completamento e il tempo di arrivo) e il tempo di attesa (differenza tra il tempo di turnaround e
- * il tempo di burst).
- *
- * @param processi[] Un array di strutture "Process" contenente i dettagli dei processi da eseguire.
- * @param num_processi Il numero totale di processi presenti nell'array.
+ * @param processi Array di processi da schedulare.
+ * @param numero_processi Numero totale di processi nell'array.
+ * @param burst_totale Il tempo totale di burst di tutti i processi.
  */
-void simulaFCFS(struct Process processi[], int numero_processi);
+void simulaFCFS(struct Processi processi[], int numero_processi, int burst_totale);
 
 #endif //SO_PROJECT_ALGORITMO_FCFS_H

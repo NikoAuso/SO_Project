@@ -21,6 +21,6 @@
  * @param processi Array di processi da schedulare.
  * @param numero_processi Numero totale di processi nell'array.
  */
-void scegli_algoritmo(struct Process *processi, int numero_processi);
+void scegli_algoritmo(struct Processi *processi, int numero_processi);
 
 #endif //SO_PROJECT_SELEZIONE_ALGORITMI_H

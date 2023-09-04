@@ -11,35 +11,26 @@
 #include <stdbool.h>
 #include <ctype.h>
 #include <math.h>
+#include <sys/stat.h>
 #include "usa_file_JSON.h"
 #include "selezione_algoritmi.h"
 #include "processi.h"
 
-//Numero massimo di processi ammissibili
-#define MAX_PROCESSES 10
+/**
+ * Verifica se un carattere rappresenta un numero intero di una cifra.
+ *
+ * @param input Il carattere da verificare.
+ * @return True se il carattere è un numero intero di una cifra, altrimenti False.
+ */
+bool numero_intero(const char *input);
 
 /**
- * Stampa un riepilogo dei processi selezionati che il programma processerà.
+ * Legge un carattere dall'input standard e restituisce un intero corrispondente.
+ * Verifica se l'input è un numero intero valido e lo converte.
  *
- * Prende in input un array di strutture "Process" contenente i dettagli dei processi da stampare
- * e il numero totale di processi presenti nell'array. Mostra a video un elenco dei processi con i relativi dati,
- * tra cui identificatore del processo (PID), tempo di arrivo e tempo di burst.
- *
- * @param processi[] Un array di strutture "Process" contenente i dettagli dei processi da stampare.
- * @param numero_processi Il numero totale di processi presenti nell'array.
+ * @return L'intero letto dall'input, oppure -1 in caso di errore.
  */
-void stampa_riepilogo_processi(struct Process processi[], int numero_processi);
-
-/**
- * Stampa i risultati dell'esecuzione dei processi, inclusi i tempi di arrivo,
- * burst, turnaround, attesa e tempo di fine.
- *
- * @param processi            L'array di strutture Process contenente i dati dei processi
- * @param numero_processi     Il numero totale di processi nell'array
- * @param tempo_totale_attesa Il tempo totale di attesa di tutti i processi
- * @param tempo_totale_turnaround Il tempo totale di turnaround di tutti i processi
- */
-void stampa_risultati(struct Process processi[], int numero_processi, int tempo_totale_attesa, int tempo_totale_turnaround);
+int leggi_input_intero();
 
 /**
  * Gestisce la creazione e l'inserimento manuale dei dati dei processi senza utilizzare un file.
@@ -54,38 +45,58 @@ void senza_file();
  *
  * @param filename Il nome del file JSON da cui caricare i dati dei processi.
  */
-void con_file(char * filename);
+void con_file(char *filename);
 
 /**
- * Verifica se un carattere rappresenta un numero intero di una cifra.
+ * Stampa un riepilogo dei processi selezionati che il programma processerà.
  *
- * @param input Il carattere da verificare.
- * @return True se il carattere è un numero intero di una cifra, altrimenti False.
+ * Prende in input un array di strutture "Processi" contenente i dettagli dei processi da stampare
+ * e il numero totale di processi presenti nell'array. Mostra a video un elenco dei processi con i relativi dati,
+ * tra cui identificatore del processo (PID), tempo di arrivo e tempo di burst.
+ *
+ * @param processi[] Un array di strutture "Processi" contenente i dettagli dei processi da stampare.
+ * @param numero_processi Il numero totale di processi presenti nell'array.
  */
-bool numero_intero(char input);
+void stampa_riepilogo_processi(struct Processi processi[], int numero_processi);
 
 /**
- * Legge un carattere dall'input standard e restituisce un intero corrispondente.
- * Verifica se l'input è un numero intero valido e lo converte.
+ * Stampa i risultati dell'esecuzione dei processi, inclusi i tempi di arrivo,
+ * burst, turnaround, attesa e tempo di fine.
  *
- * @return L'intero letto dall'input, oppure -1 in caso di errore.
+ * @param processi            L'array di strutture Processi contenente i dati dei processi
+ * @param numero_processi     Il numero totale di processi nell'array
+ * @param tempo_totale_attesa Il tempo totale di attesa di tutti i processi
+ * @param tempo_totale_turnaround Il tempo totale di turnaround di tutti i processi
  */
-int leggi_input_intero();
+void stampa_risultati(struct Processi processi[],
+                      int numero_processi,
+                      int tempo_totale_attesa,
+                      int tempo_totale_turnaround,
+                      char *buffer);
 
 /**
  * Stampa un numero specificato di spazi.
  *
  * @param n Il numero di spazi da stampare.
  */
-void stampaSpazi(int n);
+void stampa_spazi(int n, char *buffer);
 
 /**
  * Ordina un array di processi in base al tempo di arrivo utilizzando l'algoritmo Bubble Sort
  * per simulare una coda di tipo FIFO.
  *
- * @param processi L'array di strutture Process da ordinare.
+ * @param processi L'array di strutture Processi da ordinare.
  * @param numero_processi Il numero totale di processi nell'array.
  */
-void ordina_processi(struct Process processi[], int numero_processi);
+void ordine_arrivo_processi(struct Processi processi[], int numero_processi);
+
+/**
+ * Richiede all'utente se desidera salvare il contenuto dei risultati in un file.
+ *
+ * @param buffer Il buffer contenente i risultati da salvare.
+ */
+void richiedi_salvataggio_su_file(char *buffer, const char *algoritmo);
+
+int calcola_burst_totale(struct Processi processi[], int numero_processi);
 
 #endif //SO_PROJECT_UTILITIES_H

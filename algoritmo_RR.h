@@ -22,10 +22,10 @@
  * di completamento e il tempo di arrivo) e il tempo di attesa (differenza tra il tempo di turnaround e il tempo
  * di burst).
  *
- * @param processi[] Un array di strutture "Process" contenente i dettagli dei processi da eseguire.
+ * @param processi[] Un array di strutture "Processi" contenente i dettagli dei processi da eseguire.
  * @param numero_processi Il numero totale di processi presenti nell'array.
  * @param quantum La durata massima dell'esecuzione per ciascun processo nell'algoritmo Round Robin.
  */
-void simulaRR(struct Process processi[], int numero_processi, int quantum);
+void simulaRR(struct Processi processi[], int numero_processi, int quantum, int burst_totale);
 
 #endif //SO_PROJECT_ALGORITMO_RR_H
