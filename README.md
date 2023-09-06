@@ -45,6 +45,10 @@ Viene reso disponibile anche un file contenente 10 processi pronti per l'utilizz
 |    P9    |        7        |       1        |
 |   P10    |        9        |       6        |
 
+Completata la simulazione viene chiesto all'utente se vuole salvare i dati generati in un file o meno.
+Il simulatore permette di ripetere la simulazione all'infinito.
+
+In caso di input dell'utente non validi, il programma si interrompe. 
 ## Esempi
 Gli esempi sotto sono le simulazioni "fatte a mano" di ogni algoritmo per i processi presenti nel file "*processi.json*"
 <br>

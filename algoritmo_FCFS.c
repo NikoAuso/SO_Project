@@ -6,15 +6,16 @@
 
 void simulaFCFS(struct Processi processi[], int numero_processi, int burst_totale) {
     char buffer[5000];
-    system("clear");
+    system("clear"); // Pulisce la console
 
     sprintf(buffer, "Simulazione Scheduling FCFS\n\n");
     strcat(buffer, "Diagramma di Gantt:\n");
 
-    int tempo_corrente = 0;
-    int tempo_medio_di_attesa = 0;
-    int tempo_medio_di_turnaround = 0;
+    int tempo_corrente = 0;               // Il tempo corrente della simulazione
+    int tempo_medio_di_attesa = 0;        // Il tempo medio di attesa dei processi
+    int tempo_medio_di_turnaround = 0;    // Il tempo medio di turnaround dei processi
 
+    // Ciclo principale della simulazione
     for (int i = 0; i < numero_processi; i++) {
         // Verifica se il tempo corrente è inferiore al tempo di arrivo del processo
         if (tempo_corrente < processi[i].tempo_arrivo) {
@@ -22,13 +23,7 @@ void simulaFCFS(struct Processi processi[], int numero_processi, int burst_total
         }
 
         // Aggiunge informazioni sul processo al diagramma di Gantt
-        sprintf(buffer + strlen(buffer), "Processo %s%d (T. arrivo: %s%d - T. burst: %s%d) -->",
-                ((int) log10(processi[i].pid) + 1 < 2) ? " " : "",
-                processi[i].pid,
-                ((int) log10(processi[i].tempo_arrivo) + 1 < 2) ? " " : "",
-                processi[i].tempo_arrivo,
-                ((int) log10(processi[i].tempo_burst) + 1 < 2) ? " " : "",
-                processi[i].tempo_burst);
+        aggiungi_info_processo(buffer, processi[i]);
 
         // Aggiunge spazi vuoti prima di iniziare l'esecuzione del processo se necessario
         stampa_spazi(tempo_corrente, buffer);
@@ -43,20 +38,15 @@ void simulaFCFS(struct Processi processi[], int numero_processi, int burst_total
         tempo_corrente += processi[i].tempo_burst;
 
         // Calcola le metriche per il processo
-        processi[i].tempo_fine = tempo_corrente;
-        processi[i].tempo_turnaround = processi[i].tempo_fine - processi[i].tempo_arrivo;
-        processi[i].tempo_attesa = processi[i].tempo_turnaround - processi[i].tempo_burst;
-        tempo_medio_di_turnaround += processi[i].tempo_turnaround;
-        tempo_medio_di_attesa += processi[i].tempo_attesa;
+        calcola_metriche_processo(&processi[i], tempo_corrente, &tempo_medio_di_attesa, &tempo_medio_di_turnaround);
 
         // Aggiunge spazi vuoti dopo l'esecuzione del processo
         stampa_spazi(burst_totale - tempo_corrente, buffer);
 
-        // Aggiunge informazioni sulla terminazione del processo
+        // Aggiunge una riga al diagramma di Gantt indicando la terminazione del processo
         sprintf(buffer + strlen(buffer), " - [Processo %d terminato (Tempo di fine: %d)]\n", processi[i].pid,
                 tempo_corrente);
     }
-
     // Aggiunge una riga vuota
     sprintf(buffer + strlen(buffer), "\n");
 

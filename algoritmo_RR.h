@@ -5,14 +5,10 @@
 #ifndef SO_PROJECT_ALGORITMO_RR_H
 #define SO_PROJECT_ALGORITMO_RR_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include "processi.h"
-#include "utilities.h"
+#include "utilities_algoritmi.h"
 
 /**
- * Simula l'algoritmo di scheduling Round Robin su un array di processi.
+ * Simula l'algoritmo di scheduling Round Robin (RR).
  *
  * Questa funzione esegue la simulazione dell'algoritmo di scheduling Round Robin su un array di processi fornito.
  * Ogni processo viene eseguito per un periodo di tempo definito dal parametro "quantum". Quando il quantum scade,
@@ -22,9 +18,10 @@
  * di completamento e il tempo di arrivo) e il tempo di attesa (differenza tra il tempo di turnaround e il tempo
  * di burst).
  *
- * @param processi[] Un array di strutture "Processi" contenente i dettagli dei processi da eseguire.
- * @param numero_processi Il numero totale di processi presenti nell'array.
- * @param quantum La durata massima dell'esecuzione per ciascun processo nell'algoritmo Round Robin.
+ * @param processi        Un array di strutture `Processi` che rappresenta i processi da schedulare.
+ * @param numero_processi Il numero totale di processi nell'array.
+ * @param burst_totale    La somma dei tempi di burst di tutti i processi.
+ * @param quantum         La durata massima dell'esecuzione per ciascun processo nell'algoritmo Round Robin.
  */
 void simulaRR(struct Processi processi[], int numero_processi, int quantum, int burst_totale);
 

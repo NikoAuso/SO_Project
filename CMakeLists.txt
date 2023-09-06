@@ -4,12 +4,10 @@ project(SO_Project C)
 set(CMAKE_C_STANDARD 23)
 
 add_executable(SO_Project main.c
-        selezione_algoritmi.c
-        selezione_algoritmi.h
+        utilities_algoritmi.c
+        utilities_algoritmi.h
         processi.h
         cJSON.c
-        usa_file_JSON.c
-        usa_file_JSON.h
         algoritmo_FCFS.c
         algoritmo_FCFS.h
         algoritmo_SJF.c
@@ -22,3 +20,5 @@ add_executable(SO_Project main.c
         utilities.h
 )
 target_link_libraries(SO_Project PRIVATE m)
+
+#gcc -o eseguibile main.c utilities.c utilities_algoritmi.c cJSON.c algoritmo_RR.c algoritmo_FCFS.c algoritmo_SJF.c algoritmo_SRTF.c -lm

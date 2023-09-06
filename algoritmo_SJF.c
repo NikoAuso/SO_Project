@@ -6,16 +6,17 @@
 
 void simulaSJF(struct Processi processi[], int numero_processi, int burst_totale) {
     char buffer[5000];
-    system("clear");
+    system("clear"); // Pulisce la console
 
-    sprintf(buffer,"Simulazione Scheduling SJF\n\n");
-    strcat(buffer,"Diagramma di Gantt:\n");
+    sprintf(buffer, "Simulazione Scheduling SJF\n\n");
+    strcat(buffer, "Diagramma di Gantt:\n");
 
-    int tempo_corrente = 0;
-    int processi_rimasti = numero_processi;
-    int tempo_medio_di_attesa = 0;
-    int tempo_medio_di_turnaround = 0;
+    int tempo_corrente = 0;                 // Il tempo corrente della simulazione
+    int tempo_medio_di_attesa = 0;          // Il tempo medio di attesa dei processi
+    int tempo_medio_di_turnaround = 0;      // Il tempo medio di turnaround dei processi
+    int processi_rimasti = numero_processi; // Il numero i processi rimasti da eseguire
 
+    // Ciclo principale della simulazione
     while (processi_rimasti > 0) {
         int indice_piu_breve = -1;
         int burst_piu_breve = INT_MAX;
@@ -35,39 +36,47 @@ void simulaSJF(struct Processi processi[], int numero_processi, int burst_totale
         if (indice_piu_breve == -1) {
             tempo_corrente++; //Nessun processo selezionato
         } else {
-            // Processo selezionato
-            sprintf(buffer + strlen(buffer),"Processo %s%d (T. arrivo: %s%d - T. burst: %s%d) -->",
-                   ((int) log10(processi[indice_piu_breve].pid) + 1 < 2) ? " " : "",
-                   processi[indice_piu_breve].pid,
-                   ((int) log10(processi[indice_piu_breve].tempo_arrivo) + 1 < 2) ? " " : "",
-                   processi[indice_piu_breve].tempo_arrivo,
-                   ((int) log10(processi[indice_piu_breve].tempo_burst) + 1 < 2) ? " " : "",
-                   processi[indice_piu_breve].tempo_burst);
+            // Aggiunge informazioni sul processo al diagramma di Gantt
+            aggiungi_info_processo(buffer, processi[indice_piu_breve]);
+
+            // Aggiunge spazi vuoti prima di iniziare l'esecuzione del processo se necessario
             stampa_spazi(tempo_corrente, buffer);
+
+            // Simula l'esecuzione del processo aggiungendo '#' al diagramma di Gantt
             for (int t = 0; t < burst_piu_breve; t++) {
-                sprintf(buffer + strlen(buffer),"%c", '#');
+                sprintf(buffer + strlen(buffer), "%c", '#');
                 fflush(stdout);  // Svuota il buffer di output per garantire una stampa immediata
                 tempo_corrente++;
                 processi[indice_piu_breve].tempo_rimanente--;
             }
 
+            // Verifica se il processo è stato completato
             if (processi[indice_piu_breve].tempo_rimanente == 0) {
-                processi[indice_piu_breve].tempo_fine = tempo_corrente;
-                processi[indice_piu_breve].tempo_turnaround =
-                        processi[indice_piu_breve].tempo_fine - processi[indice_piu_breve].tempo_arrivo;
-                processi[indice_piu_breve].tempo_attesa =
-                        processi[indice_piu_breve].tempo_turnaround - processi[indice_piu_breve].tempo_burst;
+                // Calcola le metriche per il processo
+                calcola_metriche_processo(&processi[indice_piu_breve], tempo_corrente, &tempo_medio_di_attesa,
+                                          &tempo_medio_di_turnaround);
                 processi_rimasti--;
-                tempo_medio_di_turnaround += processi[indice_piu_breve].tempo_turnaround;
-                tempo_medio_di_attesa += processi[indice_piu_breve].tempo_attesa;
+
+                // Aggiunge spazi vuoti dopo l'esecuzione del processo
                 stampa_spazi(burst_totale - tempo_corrente, buffer);
-                sprintf(buffer + strlen(buffer)," - [Processo %d terminato (Tempo di fine: %d)]\n", processi[indice_piu_breve].pid, tempo_corrente);
-            }else
+
+                // Aggiunge informazioni sulla terminazione del processo
+                sprintf(buffer + strlen(buffer), " - [Processo %d terminato (Tempo di fine: %d)]\n",
+                        processi[indice_piu_breve].pid, tempo_corrente);
+            } else
+                // Aggiunge una nuova linea nel diagramma se il processo non è stato completato
                 sprintf(buffer + strlen(buffer), "\n");
         }
     }
+    // Aggiunge una riga vuota
     sprintf(buffer + strlen(buffer), "\n");
+
+    // Stampa le statistiche generali
     stampa_risultati(processi, numero_processi, tempo_medio_di_attesa, tempo_medio_di_turnaround, buffer);
+
+    // Stampa il contenuto del buffer (diagramma e tabella dei risultati)
     printf("%s", buffer);
-    richiedi_salvataggio_su_file(buffer, "FCFS");
+
+    // Richiede il salvataggio su file all'utente
+    richiedi_salvataggio_su_file(buffer, "SJF");
 }

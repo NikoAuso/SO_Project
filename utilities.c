@@ -111,76 +111,6 @@ void con_file(char *filename) {
     }
 }
 
-void stampa_riepilogo_processi(struct Processi processi[], int numero_processi) {
-    printf("Ecco i dati dei processi selezionati:\n");
-    printf("            | T. Arrivo  | T. Burst  |\n");
-
-    // Itera attraverso ogni processo nell'array e stampa i dati formattati
-    for (int i = 0; i < numero_processi; ++i) {
-        // Formattazione del processo i-esimo
-        printf("Processo %s%d |     %s%d     |     %s%d    |\n",
-                // Aggiunge spazio prima di ogni numero se composto da una sola cifra
-               ((int) log10(processi[i].pid) + 1 == 1) ? " " : "",
-               processi[i].pid,
-               ((int) log10(processi[i].tempo_arrivo) + 1 == 1) ? " " : "",
-               processi[i].tempo_arrivo,
-               ((int) log10(processi[i].tempo_burst) + 1 == 1) ? " " : "",
-               processi[i].tempo_burst);
-    }
-    printf("\n");
-}
-
-void stampa_risultati(struct Processi processi[],
-                      int numero_processi,
-                      int tempo_totale_attesa,
-                      int tempo_totale_turnaround,
-                      char *buffer) {
-    float tempo_medio_attesa = (float) tempo_totale_attesa / (float) numero_processi;
-    float tempo_medio_turnaround = (float) tempo_totale_turnaround / (float) numero_processi;
-
-    sprintf(buffer + strlen(buffer), "Tabella risultati:\n");
-    sprintf(buffer + strlen(buffer), "    | T. Arrivo | T. Burst | T. Fine | T. Turnaround | T. Attesa |\n");
-    for (int i = 0; i < numero_processi; ++i) {
-        sprintf(buffer + strlen(buffer),
-                "P%d%s |    %s%d     |    %s%d    |    %s%d   |       %s%d      |     %s%d    |\n",
-                processi[i].pid,
-                ((int) log10(processi[i].pid) + 1 < 2) ? " " : "",
-                ((int) log10(processi[i].tempo_arrivo) + 1 < 2) ? " " : "",
-                processi[i].tempo_arrivo,
-                ((int) log10(processi[i].tempo_burst) + 1 < 2) ? " " : "",
-                processi[i].tempo_burst,
-                ((int) log10(processi[i].tempo_fine) + 1 < 2) ? " " : "",
-                processi[i].tempo_fine,
-                ((int) log10(processi[i].tempo_turnaround) + 1 < 2) ? " " : "",
-                processi[i].tempo_turnaround,
-                ((int) log10(processi[i].tempo_attesa) + 1 < 2) ? " " : "",
-                processi[i].tempo_attesa);
-    }
-    sprintf(buffer + strlen(buffer), "                         Tempo medio |      %.*f     |    %.*f   |\n",
-            tempo_medio_turnaround < 10 ? 2 : 1, tempo_medio_turnaround,
-            tempo_medio_attesa < 10 ? 2 : 1, tempo_medio_attesa);
-}
-
-
-void stampa_spazi(int n, char *buffer) {
-    for (int i = 0; i < n; i++) {
-        sprintf(buffer + strlen(buffer), "_");
-    }
-}
-
-void ordine_arrivo_processi(struct Processi processi[], int numero_processi) {
-    for (int i = 0; i < numero_processi - 1; i++) {
-        for (int j = 0; j < numero_processi - i - 1; j++) {
-            if (processi[j].tempo_arrivo > processi[j + 1].tempo_arrivo) {
-                // Scambia i processi[j] e processi[j + 1]
-                struct Processi temp = processi[j];
-                processi[j] = processi[j + 1];
-                processi[j + 1] = temp;
-            }
-        }
-    }
-}
-
 void richiedi_salvataggio_su_file(char *buffer, const char *algoritmo) {
     // Chiede all'utente se vuole utilizzare un file per i dati o inserirli manualmente
     char salva_file;
@@ -227,15 +157,93 @@ void richiedi_salvataggio_su_file(char *buffer, const char *algoritmo) {
     }
 }
 
-int calcola_burst_totale(struct Processi processi[], int numero_processi) {
-    int burst_totale = 0;
-    int t_arrivo_piu_breve = INT_MAX;
-    for (int i = 0; i < numero_processi; ++i) {
-        if (t_arrivo_piu_breve > processi[i].tempo_arrivo) {
-            t_arrivo_piu_breve = processi[i].tempo_arrivo;
-            burst_totale += processi[i].tempo_arrivo;
-        }
-        burst_totale += processi[i].tempo_burst;
+void leggi_file_JSON(const char *filename, struct Processi **processi, int *numero_processi) {
+    // Apre il file JSON in modalità di lettura
+    FILE *file = fopen(filename, "r");
+    if (file == NULL) {
+        printf("Impossibile aprire il file %s.\n", filename);
+        exit(1);
     }
-    return burst_totale;
+
+    // Calcola la lunghezza del file
+    fseek(file, 0, SEEK_END);
+    long lunghezzaFile = ftell(file);
+    fseek(file, 0, SEEK_SET);
+
+    // Alloca memoria per il buffer
+    char *buffer = (char *) malloc(lunghezzaFile + 1);
+
+    // Legge il contenuto del file, lo mette nel buffer e chiudi il file
+    fread(buffer, 1, lunghezzaFile, file);
+    fclose(file);
+    buffer[lunghezzaFile] = '\0';
+
+    // Effettua il parsing del JSON
+    cJSON *json = cJSON_Parse(buffer);
+    if (json == NULL) {
+        const char *errore = cJSON_GetErrorPtr();
+        if (errore != NULL) {
+            fprintf(stderr, "Errore durante il parsing JSON: %s\n", errore);
+        }
+        free(buffer);
+        exit(1);
+    }
+
+    // Ottiene l'oggetto JSON contenente l'array di processi
+    cJSON *processiJSON = cJSON_GetObjectItemCaseSensitive(json, "processi");
+    if (!cJSON_IsArray(processiJSON)) {
+        cJSON_Delete(json);
+        free(buffer);
+        exit(1);
+    }
+
+    // Verifica il numero di processi nel JSON
+    int numero_processi_ottenuti = cJSON_GetArraySize(processiJSON);
+    if (numero_processi_ottenuti > MAX_PROCESSES) {
+        printf("Il numero massimo di processi consentito è %d.\n", MAX_PROCESSES);
+        cJSON_Delete(json);
+        free(buffer);
+        exit(1);
+    }
+    *numero_processi = numero_processi_ottenuti;
+
+    // Alloca memoria dinamicamente per il numero di processi nel JSON
+    *processi = (struct Processi *) malloc(*numero_processi * sizeof(struct Processi));
+    if (*processi == NULL) {
+        printf("Errore nell'allocazione di memoria.\n");
+        cJSON_Delete(json);
+        free(buffer);
+        exit(1);
+    }
+
+    // Estrae le informazioni di ciascun processo dall'array JSON
+    for (int i = 0; i < *numero_processi; i++) {
+        cJSON *processoJSON = cJSON_GetArrayItem(processiJSON, i);
+        if (cJSON_IsObject(processoJSON)) {
+            (*processi)[i].pid = cJSON_GetObjectItemCaseSensitive(processoJSON, "pid")->valueint;
+            (*processi)[i].tempo_arrivo = cJSON_GetObjectItemCaseSensitive(processoJSON, "tempo_arrivo")->valueint;
+            (*processi)[i].tempo_burst = cJSON_GetObjectItemCaseSensitive(processoJSON, "tempo_burst")->valueint;
+            (*processi)[i].tempo_rimanente = (*processi)[i].tempo_burst;
+            (*processi)[i].tempo_fine = 0;
+            (*processi)[i].tempo_turnaround = 0;
+            (*processi)[i].tempo_attesa = 0;
+        }
+    }
+
+    // Libera la memoria allocata per il JSON e il buffer
+    cJSON_Delete(json);
+    free(buffer);
+}
+
+void loading_spinner() {
+    static char bars[] = { '/', '-', '\\', '|' }; // Array di caratteri per l'effetto spinner
+    static int nbars = sizeof(bars) / sizeof(char); // Numero di caratteri nell'array
+    static int pos = 0; // Posizione corrente nel ciclo di caratteri
+
+    // Stampa il carattere corrente del ciclo di caratteri sovrascrivendo la riga precedente
+    printf("Calcolando %c\r", bars[pos]);
+
+    fflush(stdout); // Assicura che il testo venga visualizzato immediatamente
+
+    pos = (pos + 1) % nbars; // Passa al carattere successivo nel ciclo
 }

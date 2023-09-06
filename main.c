@@ -32,7 +32,7 @@ int main() {
 
         if (usa_file == 'y' || usa_file == 'Y') {
             // Chiama la funzione "con_file" per utilizzare i dati da un file JSON
-            con_file("../processi.json");
+            con_file("processi.json");
         } else if (usa_file == 'n' || usa_file == 'N') {
             // Chiama la funzione "senza_file" per inserire manualmente i dati
             senza_file();
