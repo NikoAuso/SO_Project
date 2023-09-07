@@ -120,16 +120,23 @@ void richiedi_salvataggio_su_file(char *buffer, const char *algoritmo) {
 
     if (salva_file == 'y' || salva_file == 'Y') {
         FILE *file;
+
+        // Inizializza il nome del file contenente i risultati
         char nome_file[100] = "risultati_";
         strcat(nome_file, algoritmo);
+
+        // Crea una copia del nome inizializzato sopra
+        // Questa variabile verrà utilizzata per controllare se esiste già un file con questo nome
         char nome_file_con_estensione[100];
         strcpy(nome_file_con_estensione, nome_file);
 
         file = fopen(strcat(nome_file_con_estensione, ".txt"), "r");
         if (file != NULL) {
+            // Esiste già un file; aggiunge "_1" al nome e chiude il file aperto
             strcat(nome_file, "_1");
             fclose(file);
         }
+        // Aggiunge l'estensione al file
         strcat(nome_file, ".txt");
 
         // Apri il file in modalità di scrittura

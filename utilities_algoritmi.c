@@ -76,7 +76,7 @@ void stampa_risultati(struct Processi processi[],
 
     // Visualizza lo spinner di caricamento
     for (int i = 0; i < 20; i++) {
-        loading_spinner(); // Visualizza l'effetto spinner per indicare un'operazione di caricamento in corso
+        loading_spinner();          // Visualizza l'effetto spinner per indicare un'operazione di caricamento in corso
         usleep(100000);    // Attendi 0.1 secondo (100000 microsecondi) prima di continuare
     }
 }
